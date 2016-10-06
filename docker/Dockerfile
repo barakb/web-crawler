@@ -3,26 +3,25 @@ MAINTAINER Barak Bar Orion  <barak.bar@gmail.com>
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-ENV app fake-web-tree
 
 RUN apt-get install -y git
 
 RUN curl https://glide.sh/get | sh
 
-RUN mkdir -p /golang/$app/src/github.com/barakb
-WORKDIR /golang/$app/src/github.com/barakb
+RUN mkdir -p /golang/web-crawler/src/github.com/barakb
+WORKDIR /golang/web-crawler/src/github.com/barakb
 
-RUN git clone https://github.com/barakb/$app.git
+RUN git clone https://github.com/barakb/web-crawler.git
 
 
-WORKDIR /golang/fake-web-tree/src/github.com/barakb/$app
+WORKDIR /golang/web-crawler/src/github.com/barakb/web-crawler
 
-env PATH /golang/$app/src/github.com/barakb/$app:$PATH
+env PATH /golang/web-crawler/src/github.com/barakb/web-crawler:$PATH
 
 RUN glide install
 
-WORKDIR /golang/$app
+WORKDIR /golang/web-crawler
 
-COPY serve.sh /golang/$app/
+COPY serve.sh /golang/web-crawler/
 
-ENTRYPOINT ["/golang/$app/serve.sh"]
+ENTRYPOINT ["/golang/web-crawler/serve.sh"]
