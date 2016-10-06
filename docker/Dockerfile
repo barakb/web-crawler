@@ -24,4 +24,5 @@ WORKDIR /golang/web-crawler
 
 COPY serve.sh /golang/web-crawler/
 
+
 ENTRYPOINT ["/golang/web-crawler/serve.sh"]
