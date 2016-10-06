@@ -13,7 +13,7 @@ import (
 var tokens = make(chan struct{}, runtime.NumCPU())
 
 func crawl(url string) []string {
-	log.Println(url)
+	//log.Println(url)
 	tokens <- struct{}{} // acquire a token
 	list, err := links.Extract(url)
 	<-tokens // release the token

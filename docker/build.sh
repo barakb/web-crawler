@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker build -t barakb/fake-web-tree:0.1 .
+docker build -t barakb/web-crawler:latest .
