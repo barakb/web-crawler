@@ -8,9 +8,10 @@ import (
 	"github.com/barakb/web-crawler/links"
 	"runtime"
 	"time"
+	"net/http"
 )
 
-var tokens = make(chan struct{}, runtime.NumCPU())
+var tokens = make(chan struct{}, 20)
 
 func crawl(url string) []string {
 	//log.Println(url)
@@ -25,7 +26,7 @@ func crawl(url string) []string {
 }
 
 func main() {
-	log.Printf("Concurrency level is %d\n", runtime.NumCPU())
+	http.DefaultTransport.(*http.Transport).MaxIdleConnsPerHost = 100
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	worklist := make(chan []string)
 	var n int // number of pending sends to worklist
