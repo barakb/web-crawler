@@ -3,15 +3,16 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/barakb/web-crawler/links"
 	"runtime"
 	"time"
 	"net/http"
+	"flag"
 )
 
-var tokens = make(chan struct{}, 20)
+
+var tokens chan struct{}
 
 func crawl(url string) []string {
 	//log.Println(url)
@@ -26,8 +27,12 @@ func crawl(url string) []string {
 }
 
 func main() {
+	goroutinesPtr := flag.Int("goroutines", 20, "number of concurrent goroutines")
+	flag.Parse()
 	http.DefaultTransport.(*http.Transport).MaxIdleConnsPerHost = 100
 	runtime.GOMAXPROCS(runtime.NumCPU())
+	tokens =  make(chan struct{}, *goroutinesPtr)
+	log.Printf("using %d goroutines to process %q\n", *goroutinesPtr, flag.Args())
 	worklist := make(chan []string)
 	var n int // number of pending sends to worklist
 
@@ -35,7 +40,7 @@ func main() {
 
 	// Start with the command-line arguments.
 	n++
-	go func() { worklist <- os.Args[1:] }()
+	go func() { worklist <- flag.Args() }()
 
 	// Crawl the web concurrently.
 	seen := make(map[string]bool)
